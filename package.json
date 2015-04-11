@@ -1,0 +1,30 @@
+{
+  "name": "hook-autom8",
+  "version": "0.1.0",
+  "description": "Minimal automation integration from webhooks with prime focus on continous deployment and integration.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jstroem/hook-autom8.git"
+  },
+  "author": "Jesper Lindstrøm Nielsen <me@jstroem.com> (http://jstroem.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jstroem/hook-autom8/issues"
+  },
+  "homepage": "https://github.com/jstroem/hook-autom8",
+  "dependencies": {
+    "bootstrap": "^3.3.4",
+    "express": "^4.12.3",
+    "express-handlebars": "^2.0.0",
+    "jquery": "^1.11.2",
+    "mysql": "^2.6.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-live-server": "0.0.13"
+  }
+}
