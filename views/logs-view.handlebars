@@ -1,0 +1,64 @@
+<h1>Log: {{hook.name}} - {{build.name}}</h1>
+<p>Created: {{formatDateTime log.created}}
+{{#ifCond log.status '==' 'success'}}
+	<span class="btn btn-success btn-sm">SUCCESS</span>
+	{{else}}
+	{{#ifCond log.status '==' 'failed'}}
+	  <span class="btn btn-warning btn-sm">FAILED</span>
+	{{else}}
+	  <span class="btn btn-danger btn-sm">ERROR FAILED</span>
+	{{/ifCond}}
+{{/ifCond}}
+</p>
+
+<h2>Build log:</h2>
+{{#log.build}}
+	<h5>{{cmd}}</h5>
+	{{#if stdout}}
+	<div class="col-md-2">
+		<p>Stdout:</p>
+	</div>
+	<pre class="col-md-10">{{stdout}}</pre>
+	{{/if}}
+	{{#if stderr}}
+	<div class="col-md-2">
+		<p>Stderr:</p>
+	</div>
+	<pre class="col-md-10">{{stderr}}</pre>
+	{{/if}}
+{{/log.build}}
+
+
+
+{{#ifCond log.status '==' 'success'}}
+{{else}}
+	<hr />
+
+	<h2>Build error:</h2>
+	<pre>{{JSON log.build_error}}</pre>
+
+	<hr />
+	<h2>Error log:</h2>
+	{{#log.error}}
+		<h5>{{cmd}}</h5>
+		{{#if stdout}}
+		<div class="col-md-2">
+			<p>Stdout:</p>
+		</div>
+		<pre class="col-md-10">{{stdout}}</pre>
+		{{/if}}
+		{{#if stderr}}
+		<div class="col-md-2">
+			<p>Stderr:</p>
+		</div>
+		<pre class="col-md-10">{{stderr}}</pre>
+		{{/if}}
+	{{/log.error}}
+
+	{{#ifCond log.status '==' 'error_failed'}}
+	<hr />
+
+	<h2>Error error:</h2>
+	<pre>{{JSON log.error_error}}</pre>
+	{{/ifCond}}
+{{/ifCond}}

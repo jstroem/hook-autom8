@@ -1,0 +1,20 @@
+<h1>Request: {{request.hook.name}}</h1>
+<p>
+{{#if request.passed}}
+Created: {{request.created}} - <span class="btn btn-success btn-sm">PASSED</span>
+{{else}}
+Created: {{request.created}} - <span class="btn btn-danger btn-sm">NO PASS</span>
+{{/if}}
+{{#if request.logid}}
+<a href="/logs/{{request.logid}}" class="btn btn-warning btn-sm">Build log</a>
+{{/if}}
+</p>
+
+<h2>Header:</h2>
+<pre>{{JSON request.header}}</pre>
+
+<h2>Query</h2>
+<pre>{{JSON request.query}}</pre>
+
+<h2>Body:</h2>
+<pre>{{JSON request.body}}</pre>

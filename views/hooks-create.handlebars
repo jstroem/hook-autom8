@@ -1,0 +1,55 @@
+<h1>Hooks</h1>
+
+<div ng-controller="HooksFormController">
+
+  <h2>Create a new hook</h2>
+  <form action="/hooks/create" method="POST">
+    <div class="form-group">
+      <label for="NameInput">Name</label>
+      <input type="text" class="form-control" name="name" id="NameInput" placeholder="Hook name">
+    </div> 
+    <div class="form-group">
+      <label for="BuildInput">Builds</label>
+      <select class="form-control" name="buildid" id="BuildInput">
+        {{#builds}}
+        <option value="{{id}}">{{name}}</option>
+        {{/builds}}
+      </select>
+    </div> 
+
+    <div class="form-group">
+    <h4>Rules</h4>
+    <p>You can create multiple rules that secure that its the correct web request you respond to</p>
+    <button type="button" ng-click="addRule()" class="btn btn-primary">Add rule</button>
+    </div>
+    <div class="form-group" ng-repeat="rule in rules">
+      <div class="form-inline">
+        <div class="form-group">
+          <label for="InputRuleType\{{$index}}">Type:</label>
+          <select class="form-control" id="InputRuleType\{{$index}}" ng-model="rule.type" name="rules[\{{$index}}][type]">
+            <option value="header">Header</option>
+            <option value="body">Body</option>
+            <option value="query">Query</option>
+          </select>
+        </div>
+        &nbsp;
+        &nbsp;
+        <div class="form-group">
+          <label for="InputRuleKey\{{$index}}">Key:</label>
+          <input type="text" class="form-control" id="InputRuleKey\{{$index}}" ng-model="rule.key" name="rules[\{{$index}}][key]">
+        </div>
+        &nbsp;
+        &nbsp;
+        <div class="form-group">
+          <label for="InputRuleValue\{{$index}}">Value:</label>
+          <input type="text" class="form-control" id="InputRuleValue\{{$index}}" ng-model="rule.value" name="rules[\{{$index}}][value]">
+        </div>
+        &nbsp;
+        &nbsp;
+        <button type="button" class="btn btn-danger" ng-click="removeRule($index)"><span class="glyphicon glyphicon-remove"></span></button>
+      </div>
+    </div>
+
+    <input type="submit" class="btn btn-lg btn-success pull-right" value="Create"/>
+  </form>
+</div>

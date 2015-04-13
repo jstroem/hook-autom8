@@ -1,0 +1,22 @@
+<h1>Builds
+<a href="/builds/create" class="btn btn-primary pull-right">Create new</a>
+</h1>
+
+<table class="table table-striped">
+  <tr>
+  	<th>Build name</th>
+  	<th>Last run</th>
+  	<th>-</th>
+  </tr>
+  {{#builds}}
+  <tr>
+  	<td>{{name}}</td>
+  	<td>{{formatDateTime lastrun}}</td>
+  	<td>
+      <a href="/builds/{{id}}/logs" class="btn btn-sm btn-warning">Build logs</a>
+  		<a href="/builds/{{id}}/edit" class="btn btn-sm btn-primary">Edit</a>
+  		<a href="/builds/{{id}}/remove" class="btn btn-sm btn-danger">Remove</a></td>
+  	</td>
+  </tr>
+  {{/builds}}
+</table>

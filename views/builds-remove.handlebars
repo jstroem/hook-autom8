@@ -1,0 +1,15 @@
+<h1>Builds</h1>
+
+<div>
+
+  <h2>Delete build</h2>
+  <form action="/builds/{{build.id}}/remove" method="POST">
+    <p>Are you sure you wan't to delete the build: {{build.name}}?</p>
+
+
+    <div class="text-right">
+    	<a href="/builds" class="btn btn-primary">Cancel</a>
+    	<input type="submit" class="btn btn-danger" value="Remove"/>
+    </div>
+  </form>
+</div>

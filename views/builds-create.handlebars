@@ -1,0 +1,31 @@
+<h1>Builds</h1>
+
+<div>
+
+  <h2>Create a new build</h2>
+  <form action="/builds/create" method="POST">
+    <div class="form-group">
+      <label for="NameInput">Name</label>
+      <input type="text" class="form-control" name="name" id="NameInput" placeholder="build name">
+    </div> 
+
+    <h2>Build</h2>
+    <p>In the build you can use several wildcards:</p>
+    <ul>
+      <li>To get the request info <span ng-non-bindable>\{{request}}</span></li>
+      <li>To get the hook info <span ng-non-bindable>\{{hook}}</span></li>
+      <li>To get this builds unique id <span ng-non-bindable>\{{uuid}}</span></li>
+    </ul>
+    <textarea class="code" rows="15" name="build"></textarea>
+
+    <h2>Error</h2>
+    <p>In the Error you can get the same informations as in the build including these:</p>
+    <ul>
+      <li>Output of the complete run <span ng-non-bindable>\{{output}}</span></li>
+      <li>Command that failed <span ng-non-bindable>\{{failed}}</span></li>
+    </ul>
+    <textarea class="code" rows="10" name="error"></textarea>
+
+    <input type="submit" class="btn btn-lg btn-success pull-right" value="Create"/>
+  </form>
+</div>

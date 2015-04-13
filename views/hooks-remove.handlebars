@@ -1,0 +1,15 @@
+<h1>Hooks</h1>
+
+<div>
+
+  <h2>Delete hook</h2>
+  <form action="/hooks/{{hook.id}}/remove" method="POST">
+    <p>Are you sure you wan't to delete the hook: {{hook.name}}?</p>
+
+
+    <div class="text-right">
+    	<a href="/hooks" class="btn btn-primary">Cancel</a>
+    	<input type="submit" class="btn btn-danger" value="Remove"/>
+    </div>
+  </form>
+</div>
