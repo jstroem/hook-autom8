@@ -4,7 +4,7 @@ var HookRules = require('./hookrules.js');
 var Build = require('./build.js');
 var Request = require('./request.js');
 var Handlebars = require('handlebars');
-var exec = require('child_process').exec;
+var Shell = require('./../shell.js');
 var q = require('q');
 
 Handlebars.registerHelper('JSON', function(context) {
@@ -34,7 +34,6 @@ HookObject.prototype.create = function(obj){
 };
 
 HookObject.prototype.update = function(obj){
-	console.log(obj.name);
 	return Hook.update(this, obj);
 };
 
@@ -87,7 +86,7 @@ function BuildError(msg, context, result, error) {
 }
 BuildError.prototype = Error.prototype;
 
-HookObject.prototype.runBuild = function(req){
+HookObject.prototype.runBuild = function(req) {
 	var deferred = q.defer();
 	var self = this;
 	var context = {
@@ -104,23 +103,46 @@ HookObject.prototype.runBuild = function(req){
 	}
 	var res = [];
 
-	deferred.resolve([context,res]);
-	return build.reduce(function(acc, cmd){
-		return acc.then(function(arr){
-			var context = arr[0], res = arr[1];
-			var deferred = q.defer();
-			var child = exec(cmd, function(err, so, se){
+	var shell = new Shell();
+
+	var promise = build.reduce(function(acc, cmd){
+		return acc.then(function(obj){
+			if (obj !== null){
 				res.push({
-					cmd: cmd,
-					stdout: so,
-					stderr: se
+					cmd: obj.command,
+					stdout: obj.stdout,
+					stderr: obj.stderr
 				});
-				if (err) deferred.reject(new BuildError("Failed running cmd: "+ cmd, context, res, err));
-				else deferred.resolve([context, res]);
-			});
-			return deferred.promise;
+			}
+			return shell.exec(cmd);
 		});
-	}, deferred.promise);
+	}, shell.init());
+
+	deferred = q.defer();
+	promise.then(function(obj){
+		if (obj !== null){
+			res.push({
+				cmd: obj.command,
+				stdout: obj.stdout,
+				stderr: obj.stderr
+			});
+		}
+		deferred.resolve([context, res]);
+		shell.close();
+	}).catch(function(err){
+		if (err instanceof Error) {
+			deferred.reject(new BuildError("Internal build error", context, res, err));
+		} else {
+			res.push({
+				cmd: err.command,
+				stdout: err.stdout,
+				stderr: err.stderr
+			});
+			deferred.reject(new BuildError("Failed running cmd: "+ err.command, context, res, null));
+		}
+		shell.close();
+	});
+	return deferred.promise;
 };
 
 HookObject.prototype.runError = function(req, err) {
@@ -153,23 +175,45 @@ HookObject.prototype.runError = function(req, err) {
 	}
 
 	var res = [];
-	deferred.resolve([context, res]);
-	return build.reduce(function(acc, cmd){
-		return acc.then(function(arr){
-			var context = arr[0], res = arr[1];
-			var deferred = q.defer();
-			var child = exec(cmd, function(err, so, se){
+	var shell = new Shell();
+	var promise = build.reduce(function(acc, cmd){
+		return acc.then(function(obj){
+			if (obj !== null){
 				res.push({
-					cmd: cmd,
-					stdout: so,
-					stderr: se
+					cmd: obj.command,
+					stdout: obj.stdout,
+					stderr: obj.stderr
 				});
-				if (err) deferred.reject(new BuildError("Failed running cmd: "+ cmd, context, res, err));
-				else deferred.resolve([context, res]);
-			});
-			return deferred.promise;
+			}
+			return shell.exec(cmd);
 		});
-	}, deferred.promise);
+	}, shell.init());
+
+	deferred = q.defer();
+	promise.then(function(obj){
+		if (obj !== null){
+			res.push({
+				cmd: obj.command,
+				stdout: obj.stdout,
+				stderr: obj.stderr
+			});
+		}
+		deferred.resolve([context, res]);
+		shell.close();
+	}).catch(function(err){
+		if (err instanceof Error) {
+			deferred.reject(new BuildError("Internal build error", context, res, err));
+		} else {
+			res.push({
+				cmd: err.command,
+				stdout: err.stdout,
+				stderr: err.stderr
+			});
+			deferred.reject(new BuildError("Failed running cmd: "+ err.command, context, res, null));
+		}
+		shell.close();
+	});
+	return deferred.promise;
 };
 
 HookObject.prototype.registerBuildSuccess = function(requestId, context, result) {
@@ -196,7 +240,7 @@ HookObject.prototype.registerBuildFailed = function(requestId, err, eContext, eR
 	db.query("INSERT INTO `logs` SET ?", {
 		hash: eContext.uuid,
 		build: JSON.stringify(err.result),
-		build_error: JSON.stringify(err.error),
+		build_error: err.message,
 		error: JSON.stringify(eResult),
 		status: 'failed',
 		requestid: requestId,
@@ -215,9 +259,9 @@ HookObject.prototype.registerBuildErrorFailed = function(requestId, buildError, 
 	db.query("INSERT INTO `logs` SET ?", {
 		hash: buildError.context.uuid,
 		build: JSON.stringify(buildError.result),
-		build_error: JSON.stringify(buildError.error),
+		build_error: buildError.message,
 		error: JSON.stringify(errorError.result),
-		error_error: JSON.stringify(errorError.error),
+		error_error: errorError.message,
 		status: 'error_failed',
 		requestid: requestId,
 		hookid: self.id,

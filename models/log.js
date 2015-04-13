@@ -62,8 +62,8 @@ Log.getById = function(id){
 			var obj = rows[0];
 			obj.build = JSON.parse(obj.build);
 			obj.error = JSON.parse(obj.error);
-			obj.build_error = JSON.parse(obj.build_error);
-			obj.error_error = JSON.parse(obj.error_error);
+			obj.build_error = obj.build_error;
+			obj.error_error = obj.error_error;
 			deferred.resolve(obj);
 		}
 	});

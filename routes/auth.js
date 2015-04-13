@@ -8,7 +8,6 @@ routes.loginForm = function(req,res){
 };
 
 routes.login = function(req,res){
-	console.log(req.body.username, req.body.password);
 	User.FindByUsername(req.body.username).then(function(user){
 	    if (user.password != sha1(req.body.password)) { 
 	    	return res.render('login', {error: true}); 

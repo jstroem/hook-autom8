@@ -29,7 +29,8 @@
     "moment": "^2.10.2",
     "mysql": "^2.6.1",
     "node-uuid": "^1.4.3",
-    "q": "^1.2.0"
+    "q": "^1.2.0",
+    "stateful-process-command-proxy": "^1.0.0-beta.8"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
