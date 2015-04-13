@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Vært: localhost
--- Genereringstid: 13. 04 2015 kl. 08:43:51
+-- Genereringstid: 13. 04 2015 kl. 08:46:46
 -- Serverversion: 5.6.14-log
 -- PHP-version: 5.5.14
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `hooks` (
   `lasthit` timestamp NULL DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `buildid` int(11) DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
