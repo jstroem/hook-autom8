@@ -10,7 +10,7 @@ routes.list = function(req,res, next){
 
 routes.view = function(req,res,next){
 	Log.getById(req.params.id).then(function(obj){
-		res.render('logs-view', obj);
+		res.render('logs-view', {js: [{src: '/js/logs-view.js'}], log: obj.log, hook: obj.hook, build: obj.build});
 	}, next);
 };
 

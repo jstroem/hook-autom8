@@ -12,21 +12,33 @@
 </p>
 
 <h2>Build log:</h2>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 {{#log.build}}
-	<h5>{{cmd}}</h5>
-	{{#if stdout}}
-	<div class="col-md-2">
-		<p>Stdout:</p>
+	<div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="buildHeading{{@index}}">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" data-parent="#accordion" href="#build{{@index}}" aria-expanded="true" aria-controls="build{{@index}}">{{cmd}}</a>
+			</h4>
+		</div>
+	    <div id="build{{@index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="buildHeading{{@index}}">
+			<div class="panel-body">
+				{{#if stdout}}
+				<div class="col-md-2">
+					<p>Stdout:</p>
+				</div>
+				<pre class="col-md-10">{{stdout}}</pre>
+				{{/if}}
+				{{#if stderr}}
+				<div class="col-md-2">
+					<p>Stderr:</p>
+				</div>
+				<pre class="col-md-10">{{stderr}}</pre>
+				{{/if}}
+			</div>
+		</div>
 	</div>
-	<pre class="col-md-10">{{stdout}}</pre>
-	{{/if}}
-	{{#if stderr}}
-	<div class="col-md-2">
-		<p>Stderr:</p>
-	</div>
-	<pre class="col-md-10">{{stderr}}</pre>
-	{{/if}}
 {{/log.build}}
+</div>
 
 
 
@@ -39,21 +51,33 @@
 
 	<hr />
 	<h2>Error log:</h2>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	{{#log.error}}
-		<h5>{{cmd}}</h5>
-		{{#if stdout}}
-		<div class="col-md-2">
-			<p>Stdout:</p>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="errorHeading{{@index}}">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion" href="#error{{@index}}" aria-expanded="true" aria-controls="error{{@index}}">{{cmd}}</a>
+				</h4>
+			</div>
+		    <div id="error{{@index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="errorHeading{{@index}}">
+		    	<div class="panel-body">
+					{{#if stdout}}
+					<div class="col-md-2">
+						<p>Stdout:</p>
+					</div>
+					<pre class="col-md-10">{{stdout}}</pre>
+					{{/if}}
+					{{#if stderr}}
+					<div class="col-md-2">
+						<p>Stderr:</p>
+					</div>
+					<pre class="col-md-10">{{stderr}}</pre>
+					{{/if}}
+				</div>
+			</div>
 		</div>
-		<pre class="col-md-10">{{stdout}}</pre>
-		{{/if}}
-		{{#if stderr}}
-		<div class="col-md-2">
-			<p>Stderr:</p>
-		</div>
-		<pre class="col-md-10">{{stderr}}</pre>
-		{{/if}}
 	{{/log.error}}
+	</div>
 
 	{{#ifCond log.status '==' 'error_failed'}}
 	<hr />
