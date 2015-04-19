@@ -8,7 +8,7 @@ Log.getAll = function(page){
 		page = 0;
 	var limit = 100;
 	var deferred = q.defer();
-	db.query('SELECT `l`.*, `h`.`name` AS `hookname`, `b`.`name` AS `buildname` FROM `logs` AS `l` INNER JOIN `hooks` AS `h` ON `h`.`id` = `l`.`hookid` INNER JOIN `builds` AS `b` ON `b`.`id` = `l`.`buildid` WHERE 1 ORDER BY `id` DESC LIMIT ?, ?', [page*limit, limit], function(err, rows){
+	db.query('SELECT `l`.`status`, `l`.`buildid`, `l`.`hookid`, `l`.`created`, `l`.`id`, `l`.`requestid`, `h`.`name` AS `hookname`, `b`.`name` AS `buildname` FROM `logs` AS `l` INNER JOIN `hooks` AS `h` ON `h`.`id` = `l`.`hookid` INNER JOIN `builds` AS `b` ON `b`.`id` = `l`.`buildid` WHERE 1 ORDER BY `id` DESC LIMIT ?, ?', [page*limit, limit], function(err, rows){
 		if (err) deferred.reject(err);
 		else deferred.resolve(rows);
 	});
