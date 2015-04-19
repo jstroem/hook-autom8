@@ -5,5 +5,8 @@
 		"password": "password",
 		"database": "db"
 	},
-	"port": 3000
+	"port": 3000,
+	"ssl": false,
+	"key": null,
+	"cert": null
 }

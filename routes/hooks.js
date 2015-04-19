@@ -74,10 +74,12 @@ routes.logs = function(req,res,next){
 
 routes.inbound = function(req,res, next){
 	var hook = null;
+	var requestId = null;
 	Hook.getByHash(req.params.hash).then(function(h){
 		hook = h;
 		return hook.registerRequest(req);
-	}).then(function(requestId){
+	}).then(function(rid){
+		requestId = rid;
 		if (hook.checkRequest(req)) {
 			res.status(200).end();
 			hook.runBuild(req).then(function(arr){
@@ -94,6 +96,12 @@ routes.inbound = function(req,res, next){
 				return Request.setLogId(requestId, logid);
 			}).then(function(){
 				return Build.registerRun(hook.buildid);
+			}).catch(function(err){
+				hook.registerBuildFailed(requestId, err, null, null).then(function(logid){
+					Request.setLogId(requestId, logid).then(function(){
+						Build.registerRun(hook.buildid);
+					});
+				});
 			});
 		} else {
 			res.status(404).end();

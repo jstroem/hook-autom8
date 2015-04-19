@@ -1,6 +1,7 @@
 var express = require('express');
-var exphbs  = require('express-handlebars');
+var exphbs = require('express-handlebars');
 var moment = require('moment');
+var https = require('https');
 var conf = require('./config.json');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -18,10 +19,16 @@ var app = express();
 app.engine('handlebars', exphbs({
 	defaultLayout: 'main',
 	helpers: {
-		JSON: function(obj) { return JSON.stringify(obj, null, 2); },
-		formatDate: function(timestamp){ return moment(timestamp).format('MM/DD/YYYY'); },
-		formatDateTime: function(timestamp) {return moment(timestamp).format('MM/DD/YYYY HH:mm:ss'); },
-		ifCond: function (v1, operator, v2, options) {
+		JSON: function(obj) {
+			return JSON.stringify(obj, null, 2);
+		},
+		formatDate: function(timestamp) {
+			return moment(timestamp).format('MM/DD/YYYY');
+		},
+		formatDateTime: function(timestamp) {
+			return moment(timestamp).format('MM/DD/YYYY HH:mm:ss');
+		},
+		ifCond: function(v1, operator, v2, options) {
 			switch (operator) {
 				case '==':
 					return (v1 == v2) ? options.fn(this) : options.inverse(this);
@@ -46,13 +53,17 @@ app.engine('handlebars', exphbs({
 	}
 }));
 app.set('view engine', 'handlebars');
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
+	res.status(500);
+	res.render('error', {
+		error: err
+	});
 }
 
 app.use(errorHandler);
@@ -60,7 +71,7 @@ app.use(errorHandler);
 app.use(session({
 	secret: 's9Pq5EZwWUpQKUYu7sDq9H6vqjrQGDwwSPn9bX7WkDPxEFkMwDzMFxaLN2x7WZ9JWC73JFDF',
 	resave: false,
-    saveUninitialized: false
+	saveUninitialized: false
 }));
 
 app.use('/angular/angular.js', express.static('node_modules/angular/angular.js'));
@@ -103,11 +114,24 @@ app.post('/login', auth.login);
 app.all('/logout', auth.logout);
 
 
-var server = app.listen(conf.port, function () {
+if (config.ssl) {
+	var options = {
+		key: fs.readFileSync(options.key),
+		cert: fs.readFileSync(options.cert),
+	};
+	var server = https.createServer(options, app).listen(conf.port, function() {
+		var host = server.address().address;
+		var port = server.address().port;
 
-  var host = server.address().address;
-  var port = server.address().port;
+		console.log('Example app listening at http://%s:%s', host, port);
+	});
+} else {
+	var server = app.listen(conf.port, function() {
 
-  console.log('Example app listening at http://%s:%s', host, port);
+		var host = server.address().address;
+		var port = server.address().port;
 
-});
+		console.log('Example app listening at http://%s:%s', host, port);
+
+	});
+}
